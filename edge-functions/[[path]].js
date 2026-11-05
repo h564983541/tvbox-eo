@@ -12463,6 +12463,9 @@ if (typeof globalThis.caches === "undefined") {
     }
   };
 }
+if (typeof globalThis.process === "undefined") {
+  globalThis.process = { env: {}, versions: {}, cwd: () => "/" };
+}
 function buildConfig(env) {
   return {
     adminToken: env.ADMIN_TOKEN,

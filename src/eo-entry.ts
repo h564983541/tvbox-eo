@@ -22,6 +22,14 @@ if (typeof (globalThis as any).caches === 'undefined') {
   };
 }
 
+// EdgeOne 运行时没有 Node 的 process 全局，而 routes.ts / logger.ts 会读
+// process.env（DMZ、VERBOSE 等）。缺了它，凡是走 resolveBaseUrl 的路径
+// （/、/index.json、/live.json、/live-config）都会抛 ReferenceError，
+// 表现为平台级 500 "Internal Server Error"。这里垫一个空的 process。
+if (typeof (globalThis as any).process === 'undefined') {
+  (globalThis as any).process = { env: {}, versions: {}, cwd: () => '/' };
+}
+
 interface EoEnv {
   ADMIN_TOKEN?: string;
   REFRESH_TOKEN?: string;
